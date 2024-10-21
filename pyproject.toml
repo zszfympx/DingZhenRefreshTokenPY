@@ -1,0 +1,19 @@
+[project]
+name = "DingZhenRefreshTokenPY"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "zszfympx", email = "2792668017@qq.com"},
+]
+dependencies = [
+    "requests>=2.32.3",
+    "flask>=3.0.3",
+    "pycryptodome>=3.21.0",
+]
+requires-python = ">=3.8.0"
+readme = "README.md"
+license = {text = "GPLv3"}
+
+
+[tool.pdm]
+distribution = false
