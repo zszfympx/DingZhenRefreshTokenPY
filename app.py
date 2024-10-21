@@ -10,6 +10,7 @@ import time
 app = Flask(__name__)
 
 config: dict = None
+lastAuthTime: int = 0
 
 def get_initialization_vector(secret_key):
     iv = bytearray(16) 
@@ -57,26 +58,22 @@ def doAuth(account: dict) -> dict:
 
             if response.ok:
                 if len(response_string) != 33:
-                    res = None
 
                     if response_string == "1006":
-                        res = "共享账户无法进行登录,是IP被封禁了吗"
-                        
+                        return {'token': 'null', 'status': 'CLOUDFLARE', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}
                         
                     elif response_string == "102":
-                        res = "共享账户账户似乎被封禁了"
+                        return {'token': 'null', 'status': 'BANNED', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}
                         
                     else:
-                        res = "共享账户在验证的时候产生了未知错误"
-                        
-                    return res
+                        return {'token': 'null', 'status': 'SERVLET_ERROR', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}
 
-            return response.text
+            return {'token': encrypt(response.text, config['gateway']['secret_key']), 'status': 'OK', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}
         else:
-            return "服务器发生未知错误"
+            return {'token': 'null', 'status': 'SERVLET_ERROR', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}
 
     except Exception:
-        return "服务器发生未知错误"        
+        return {'token': 'null', 'status': 'SERVLET_ERROR', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}     
 
 @app.route("/")
 def pong():
@@ -87,11 +84,9 @@ def refresh_token():
     sending_secret = request.headers['X-Gateway-Secret']
     if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
         return 'Gateway Secret is not correct.', 403
-    token = doAuth(getAccount())
-    if token!=33:
-        return token, 500
-    else:
-        return token, 200
+    if not lastAuthTime+config['gateway']['colddown']>time.time():
+        return {'token': 'null', 'status': 'NO_ACCOUNT', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}, 200
+    return doAuth(getAccount()), 200
 
 @app.route("/gateway/heartbeat")
 def heartbeat():
@@ -103,4 +98,4 @@ def heartbeat():
 if __name__ == '__main__':
     with open('config.yml', 'r') as f:
         config = yaml.load(f)
-    app.run(config['flask']['host'], config['flask']['port'], config['flask']['debug'])
+    app.run(config['flask']['host'], config['flask']['port'], config['flask']['debug'])     
