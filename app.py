@@ -12,6 +12,10 @@ app = Flask(__name__)
 config: dict = None
 lastAuthTime: int = 0
 
+with open('./config.yml', 'r', encoding='utf-8') as f:
+    config = yaml.load(f, Loader=yaml.SafeLoader)
+print(config)
+
 def get_initialization_vector(secret_key):
     iv = bytearray(16) 
     encoded_key = secret_key.encode() 
@@ -82,7 +86,10 @@ def pong():
 @app.route("/gateway/token")
 def refresh_token():
     sending_secret = request.headers['X-Gateway-Secret']
-    if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
+    try:
+        if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
+            return 'Gateway Secret is not correct.', 403
+    except Exception:
         return 'Gateway Secret is not correct.', 403
     if not lastAuthTime+config['gateway']['colddown']>time.time():
         return {'token': 'null', 'status': 'NO_ACCOUNT', 'colddown': {'time': lastAuthTime+config['gateway']['colddown']}}, 200
@@ -91,11 +98,12 @@ def refresh_token():
 @app.route("/gateway/heartbeat")
 def heartbeat():
     sending_secret = request.headers['X-Gateway-Secret']
-    if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
+    try:
+        if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
+            return 'Gateway Secret is not correct.', 403
+    except Exception:
         return 'Gateway Secret is not correct.', 403
     return {'time': time.time(), 'colddown': {'time': time.time()-3600}, 'implementation': 'zszfympx/DingZhenRefreshTokenPY'}, 200
 
 if __name__ == '__main__':
-    with open('config.yml', 'r') as f:
-        config = yaml.load(f)
     app.run(config['flask']['host'], config['flask']['port'], config['flask']['debug'])     
