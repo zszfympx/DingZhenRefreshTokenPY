@@ -1,6 +1,6 @@
 from flask import Flask, request
-from crypto.Cipher import AES
-from crypto.Util.Padding import unpad, pad
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad, pad
 import requests
 import base64
 import yaml
