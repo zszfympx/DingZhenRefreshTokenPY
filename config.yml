@@ -3,3 +3,7 @@ gateway:
   secret_key: tg8DRuZZc9rAxrQgqDx/IuTa0ZgDogZ1cIxAO1udGPg=
 accounts:
   - zszf-1234-hwid
+flask:
+  host: 0.0.0.0
+  port: 8080
+  debug: false

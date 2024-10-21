@@ -103,3 +103,4 @@ def heartbeat():
 if __name__ == '__main__':
     with open('config.yml', 'r') as f:
         config = yaml.load(f)
+    app.run(config['flask']['host'], config['flask']['port'], config['flask']['debug'])

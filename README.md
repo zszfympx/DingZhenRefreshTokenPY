@@ -9,6 +9,38 @@
 ## 购买丁真
 [getvape](https://getvape.today/)
 
+## 使用教程
+
+你可能需要使用类似tmux, screen等工具来保持后台运行
+
+### pip 安装依赖
+- 仓库中已有requirements.txt，直接运行
+```sh
+pip install -r requirements.txt
+```
+即可安装所需依赖
+
+- 在cmd/bash中运行
+```sh
+flask run
+```
+即可打开本项目 
+
+### pdm/poetry 安装依赖
+- 仓库中已有pyproject.toml，直接运行
+```sh
+pdm install
+```
+```sh
+poetry install
+```
+安装依赖
+- 在cmd/bash中运行
+```sh
+flask run
+```
+即可打开本项目
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=CubeWhyMC/DingZhenServlet,zszfympx/DingZhenRefreshTokenPY&type=Date)](https://star-history.com/#CubeWhyMC/DingZhenServlet&zszfympx/DingZhenRefreshTokenPY&Date)
