@@ -86,7 +86,7 @@ def pong():
 def refresh_token():
     sending_secret = request.headers['X-Gateway-Secret']
     try:
-        if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
+        if not decrypt(sending_secret) == 'Hello World':
             return 'Gateway Secret is not correct.', 403
     except Exception:
         return 'Gateway Secret is not correct.', 403
@@ -99,7 +99,7 @@ def heartbeat():
     sending_secret = request.headers['X-Gateway-Secret']
     print(sending_secret)
     try:
-        if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
+        if not decrypt(sending_secret) == 'Hello World':
             return 'Gateway Secret is not correct.', 403
     except Exception:
         return 'Gateway Secret is not correct.', 403
