@@ -17,23 +17,21 @@ with open('./config.yml', 'r', encoding='utf-8') as f:
 print(config)
 
 def get_initialization_vector(secret_key):
-    iv = bytearray(16) 
-    encoded_key = secret_key.encode() 
-    iv[:len(encoded_key)] = encoded_key[:16]
-    return bytes(iv)
+    iv = secret_key[:16]
+    return iv
 
-def encrypt(plaintext, secret_key):
-    iv = get_initialization_vector(secret_key)
-    cipher = AES.new(secret_key.encode(), AES.MODE_CBC, iv)
+def encrypt(plaintext, key = config['gateway']['secret_key']):
+    iv = get_initialization_vector(key)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
     encrypted = cipher.encrypt(pad(plaintext.encode(), AES.block_size))
-    return base64.b64encode(encrypted).decode()
+    return base64.b64encode(encrypted).decode('utf-8')
 
-def decrypt(ciphertext, secret_key):
-    iv = get_initialization_vector(secret_key)
-    cipher = AES.new(secret_key.encode(), AES.MODE_CBC, iv)
+def decrypt(ciphertext, key = config['gateway']['secret_key']):
+    iv = get_initialization_vector(key)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
     decrypted = unpad(cipher.decrypt(base64.b64decode(ciphertext)), AES.block_size)
-    return decrypted.decode()
-    
+    return decrypted.decode('utf-8')
+
 def getAccount() -> dict:
     acc :list = str(random.choice(config['accounts'])).split('-')
     username = acc[0]
@@ -99,6 +97,7 @@ def refresh_token():
 @app.route("/gateway/heartbeat")
 def heartbeat():
     sending_secret = request.headers['X-Gateway-Secret']
+    print(sending_secret)
     try:
         if not decrypt(config['gateway']['secret_key'], sending_secret) == 'Hello World':
             return 'Gateway Secret is not correct.', 403
