@@ -2,6 +2,6 @@ gateway:
   # 确保与主控端一致
   secret_key: tg8DRuZZc9rAxrQgqDx/IuTa0ZgDogZ1cIxAO1udGPg=
   # 冷却时间
-  colddown: 300
+  colddown: 0
 accounts:
   - zszf-1234-hwid
