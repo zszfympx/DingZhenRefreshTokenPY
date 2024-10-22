@@ -27,6 +27,7 @@ flask run
 即可打开本项目 
 
 ### pdm/poetry 安装依赖
+
 - 仓库中已有pyproject.toml，直接运行
 ```sh
 pdm install
@@ -40,6 +41,10 @@ poetry install
 flask run
 ```
 即可打开本项目
+
+### Docker 中运行
+
+本项目已有dockerfile文件，请自行启动。
 
 ## Star History
 

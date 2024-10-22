@@ -54,6 +54,7 @@ def doAuth(account: dict) -> dict:
         "v": "v3",
         "t": "true"
     }
+    lastAuthTime = time.time()
     try:
         response = requests.post(url, headers=headers, data=data)
 
@@ -103,7 +104,7 @@ def heartbeat():
             return 'Gateway Secret is not correct.', 403
     except Exception:
         return 'Gateway Secret is not correct.', 403
-    return {'time': time.time(), 'colddown': {'time': time.time()-3600}, 'implementation': 'zszfympx/DingZhenRefreshTokenPY'}, 200
+    return {'time': time.time(), 'colddown': {'time': lastAuthTime-config['gateway']['colddown']}, 'implementation': 'zszfympx/DingZhenRefreshTokenPY'}, 200
 
 if __name__ == '__main__':
     app.run(config['flask']['host'], config['flask']['port'], config['flask']['debug'])     
