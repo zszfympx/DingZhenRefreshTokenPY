@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 - 在cmd/bash中运行
 ```sh
-flask run
+python app.py
 ```
 即可打开本项目 
 
@@ -38,7 +38,7 @@ poetry install
 安装依赖
 - 在cmd/bash中运行
 ```sh
-flask run
+python app.py
 ```
 即可打开本项目
 

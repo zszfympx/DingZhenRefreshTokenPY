@@ -5,7 +5,3 @@ gateway:
   colddown: 300
 accounts:
   - zszf-1234-hwid
-flask:
-  host: 0.0.0.0
-  port: 8080
-  debug: false

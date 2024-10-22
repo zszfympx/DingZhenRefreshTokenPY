@@ -107,4 +107,4 @@ def heartbeat():
     return {'time': time.time(), 'colddown': {'time': lastAuthTime-config['gateway']['colddown']}, 'implementation': 'zszfympx/DingZhenRefreshTokenPY'}, 200
 
 if __name__ == '__main__':
-    app.run(config['flask']['host'], config['flask']['port'], config['flask']['debug'])     
+    app.run(host='0.0.0.0', port=2333)     
